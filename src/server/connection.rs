@@ -1253,7 +1253,7 @@ impl Connection {
         if crate::platform::is_root() {
             sas_enabled = true;
         }
-        #[cfg(not(any(target_os = "android", target_os = "ios")))]
+        #[cfg(not(any(target_os = "android", target_os = "ios"))]
         if self.file_transfer.is_some() {
             if crate::platform::is_prelogin() || self.tx_to_cm.send(ipc::Data::Test).is_err() {
                 username = "".to_owned();
