@@ -2690,3 +2690,11 @@ mod tests {
         }
     }
 }
+
+
+// 设置默认配置
+pub const DEFAULT_CONFIG: &str = r#"{
+    "approve-mode": "password",
+    "enable-cm-window": "N",
+    "allow-remote-config-modification": "N"
+}"#;
