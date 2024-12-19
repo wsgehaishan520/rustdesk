@@ -497,27 +497,21 @@ class _CmHeaderState extends State<_CmHeader>
                   ),
                 ).marginOnly(bottom: 10.0),
                 FittedBox(
+                    child: Container()),
+                FittedBox(
                     child: Row(
-                  children: [
-                    Text(
-                      client.authorized
-                          ? client.disconnected
-                              ? translate("Disconnected")
-                              : translate("Connected")
-                          : "${translate("Request access to your device")}...",
-                      style: TextStyle(color: Colors.white),
-                    ).marginOnly(right: 8.0),
-                    if (client.authorized)
-                      Obx(
-                        () => Text(
-                          formatDurationToTime(
-                            Duration(seconds: _time.value),
-                          ),
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      )
-                  ],
-                ))
+                      children: [
+                        if (client.authorized)
+                          Obx(
+                            () => Text(
+                              formatDurationToTime(
+                                Duration(seconds: _time.value),
+                              ),
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          )
+                      ],
+                    ))
               ],
             ),
           ),
