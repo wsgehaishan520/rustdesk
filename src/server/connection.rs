@@ -1,5 +1,5 @@
 use super::{input_service::*, *};
-#[cfg(not(any(target_os = "android", target_os = "ios"))]
+#[cfg(not(any(target_os = "android", target_os = "ios")))]
 use crate::clipboard::{update_clipboard, ClipboardSide};
 #[cfg(any(target_os = "windows", target_os = "linux", target_os = "macos"))]
 use crate::clipboard_file::*;
