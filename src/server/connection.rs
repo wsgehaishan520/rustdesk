@@ -1796,7 +1796,7 @@ impl Connection {
             //     }
             //     return true;
 
-            } else if self.is_recent_session(false) {
+            else if self.is_recent_session(false) {
                 if err_msg.is_empty() {
                     #[cfg(target_os = "linux")]
                     // self.linux_headless_handle.wait_desktop_cm_ready().await;
