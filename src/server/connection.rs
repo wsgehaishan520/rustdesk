@@ -1680,11 +1680,12 @@ impl Connection {
                 }
             });
             #[cfg(all(windows, feature = "flutter"))]
-            std::thread::spawn(move || {
-                if crate::is_server() && !crate::check_process("--tray", false) {
-                    crate::platform::run_as_user(vec!["--tray"]).ok();
-                }
-            });
+            // std::thread::spawn(move || {
+            //     if crate::is_server() && !crate::check_process("--tray", false) {
+            //         crate::platform::run_as_user(vec!["--tray"]).ok();
+            //     }
+            // }
+        );
         }
     }
 
@@ -1784,21 +1785,21 @@ impl Connection {
             //     }
             //     return true;
 
-                else if (password::has_valid_password())
-            {
-                self.try_start_cm(lr.my_id, lr.my_name, false);
-                if hbb_common::get_version_number(&lr.version)
-                    >= hbb_common::get_version_number("1.2.0")
-                {
-                    self.send_login_error(crate::client::LOGIN_MSG_NO_PASSWORD_ACCESS)
-                        .await;
-                }
-                return true;
+            //     else if (password::has_valid_password())
+            // {
+            //     self.try_start_cm(lr.my_id, lr.my_name, false);
+            //     if hbb_common::get_version_number(&lr.version)
+            //         >= hbb_common::get_version_number("1.2.0")
+            //     {
+            //         self.send_login_error(crate::client::LOGIN_MSG_NO_PASSWORD_ACCESS)
+            //             .await;
+            //     }
+            //     return true;
 
             } else if self.is_recent_session(false) {
                 if err_msg.is_empty() {
                     #[cfg(target_os = "linux")]
-                    self.linux_headless_handle.wait_desktop_cm_ready().await;
+                    // self.linux_headless_handle.wait_desktop_cm_ready().await;
                     self.send_logon_response().await;
                     self.try_start_cm(lr.my_id.clone(), lr.my_name.clone(), self.authorized);
                 } else {
@@ -1834,7 +1835,7 @@ impl Connection {
                     self.update_failure(failure, true, 0);
                     if err_msg.is_empty() {
                         #[cfg(target_os = "linux")]
-                        self.linux_headless_handle.wait_desktop_cm_ready().await;
+                        // self.linux_headless_handle.wait_desktop_cm_ready().await;
                         self.send_logon_response().await;
                         self.try_start_cm(lr.my_id, lr.my_name, self.authorized);
                     } else {
@@ -3726,7 +3727,7 @@ impl LinuxHeadlessHandle {
                 Some(os_login) => {
                     linux_desktop_manager::try_start_desktop(&os_login.username, &os_login.password)
                 }
-                None => linux_desktop_manager::try_start_desktop("", ""),
+                // None => linux_desktop_manager::try_start_desktop("", ""),
             }
         } else {
             "".to_string()
